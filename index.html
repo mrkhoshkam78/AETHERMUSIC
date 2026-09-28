@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"/>
+<title>NEXUS // مرکز کنترل زیرساخت ملی آروندیا</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070c;--cyan:#4de8e0;--amber:#f0b429;--red:#ff4d6d;--green:#3dff9a;--violet:#9b7dff;
+  --line:#1c2a3a;--text:#d7e4ef;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Vazirmatn',sans-serif}
+body{overflow:hidden}
+.mono{font-family:'Share Tech Mono',monospace}
+#boot{position:fixed;inset:0;z-index:2000;background:#020305;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#boot .scan{position:absolute;left:0;right:0;height:80px;background:linear-gradient(180deg,transparent,rgba(77,232,224,.12),transparent);animation:scan 2.2s linear infinite}
+@keyframes scan{from{top:-80px}to{top:100%}}
+@keyframes pulse{50%{opacity:.45}}
+@keyframes flicker{0%,100%{opacity:1}40%{opacity:.7}42%{opacity:1}43%{opacity:.4}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 rgba(77,232,224,0)}50%{box-shadow:0 0 18px rgba(77,232,224,.35)}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes dropIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@keyframes barFlash{0%{filter:brightness(1)}50%{filter:brightness(1.8)}100%{filter:brightness(1)}}
+@keyframes siren{0%,100%{border-color:#ff4d6d}50%{border-color:#f0b429}}
+@keyframes mapPulse{0%,100%{stroke-width:1.2}50%{stroke-width:2.4}}
+@keyframes typeCaret{50%{border-color:transparent}}
+@keyframes ripple{from{box-shadow:0 0 0 0 rgba(77,232,224,.4)}to{box-shadow:0 0 0 14px rgba(77,232,224,0)}}
+.anim-rise{animation:rise .45s ease both}
+.anim-drop{animation:dropIn .35s ease both}
+.anim-glow{animation:glowPulse 2.4s ease-in-out infinite}
+.anim-flicker{animation:flicker 3s infinite}
+.anim-shake{animation:shake .35s}
+.anim-flash{animation:barFlash .6s}
+.anim-siren{animation:siren 1s infinite}
+.anim-map{animation:mapPulse 1.6s ease-in-out infinite}
+.topbar{background:linear-gradient(180deg,#0c121c,#080c12);border-bottom:1px solid var(--line);min-height:58px}
+.brand b{color:var(--cyan);letter-spacing:3px;font-size:12px}
+.kpi{background:#0a121b;border:1px solid var(--line);padding:.25rem .6rem;min-width:72px}
+.kpi s{display:block;font-size:9px;color:#7a8ea3;text-decoration:none}
+.kpi.bad b{color:var(--red)}.kpi.ok b{color:var(--green)}.kpi.warn b{color:var(--amber)}
+.workspace{height:calc(100dvh - 58px - 44px);min-height:0}
+.col-pane{height:100%;overflow:auto;background:#080d14;border-color:var(--line)!important}
+h6.sec{font-size:11px;letter-spacing:2px;color:var(--cyan)}
+.tree .btn{width:100%;text-align:right;background:#0c141e;border:1px solid var(--line);color:var(--text);margin-bottom:6px}
+.tree .btn.active{border-color:var(--cyan);box-shadow:0 0 16px rgba(77,232,224,.2)}
+.tree .lv2{padding-right:1.2rem;font-size:.9rem}
+.tree .lv3{padding-right:2rem;font-size:.8rem;color:#bcd}
+.mapwrap{height:220px;background:#071018;border:1px solid var(--line)}
+@media(min-width:992px){.mapwrap{height:260px}}
+svg.map{width:100%;height:100%}
+.poly{fill:#0e2230;stroke:#2a4a5c;stroke-width:1.2;cursor:pointer;transition:.25s}
+.poly:hover,.poly.sel{fill:#16384a;stroke:var(--cyan);filter:drop-shadow(0 0 6px #4de8e0)}
+.infra-card{background:#101821;border:1px solid var(--line)}
+.infra-card .v{font-size:1.15rem}
+.meter{height:5px;background:#122}
+.meter>i{display:block;height:100%;background:var(--cyan);transition:width .6s ease}
+.meter.warn>i{background:var(--amber)}.meter.bad>i{background:var(--red)}
+.talk{background:#0c141e;border:1px solid var(--line);animation:rise .4s ease}
+.talk .who{color:var(--violet);font-size:11px}
+.foot{height:44px;border-top:1px solid var(--line);background:#080c12;font-size:12px}
+.alert-live{color:var(--red);animation:pulse 1.6s infinite}
+.offcanvas,.modal-content{background:#0c121c;color:var(--text);border:1px solid var(--cyan)}
+.form-range::-webkit-slider-thumb{background:var(--cyan)}
+.form-select,.form-control{background:#0c141e;color:#fff;border-color:var(--line)}
+.form-select:focus,.form-control:focus{background:#0c141e;color:#fff;border-color:var(--cyan);box-shadow:0 0 0 .2rem rgba(77,232,224,.15)}
+.btn-nx{background:#102028;border:1px solid var(--cyan);color:var(--cyan)}
+.btn-nx:hover{background:#163040;color:#fff}
+.fx-toast{position:fixed;left:12px;bottom:56px;z-index:1080;max-width:280px}
+@media(max-width:991.98px){
+  body{overflow:auto}
+  .workspace{height:auto;min-height:calc(100dvh - 102px)}
+  .col-pane{height:auto;max-height:none;border:0!important}
+  .kpis-wrap{overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .kpis-wrap .kpi{flex:0 0 auto}
+}
+#scanline{pointer-events:none;position:fixed;inset:0;z-index:1500;background:repeating-linear-gradient(180deg,transparent 0 2px,rgba(0,0,0,.07) 2px 4px);opacity:.25}
+</style>
+</head>
+<body>
+<div id="scanline"></div>
+<div id="boot">
+  <div class="scan"></div>
+  <div class="logo mono text-info anim-flicker">NEXUS // ARVANDIA INFRASTRUCTURE CORE</div>
+  <div class="progress w-75" style="max-width:420px;height:4px;background:#122">
+    <div class="progress-bar bg-info" id="bfill" style="width:0"></div>
+  </div>
+  <div class="mono small text-secondary" id="bmsg">راه‌اندازی هسته…</div>
+</div>
+
+<nav class="topbar d-flex align-items-center gap-2 px-2 px-md-3">
+  <button class="btn btn-nx btn-sm d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#leftNav" onclick="sfx('click')">مناطق</button>
+  <div class="brand"><b class="mono d-block">NEXUS</b><span class="small text-secondary d-none d-sm-inline">مرکز کنترل زیرساخت — آروندیا</span></div>
+  <div class="kpis-wrap d-flex gap-2 flex-grow-1 justify-content-center" id="kpis"></div>
+  <div class="mono small text-end">
+    <div id="daylbl">روز ۱ — ۰۸:۰۰</div>
+    <div class="text-warning anim-flicker" id="tick">● LIVE</div>
+  </div>
+  <button class="btn btn-nx btn-sm d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#rightNav" onclick="sfx('click')">فرمان</button>
+</nav>
+
+<div class="container-fluid p-0">
+  <div class="row g-0 workspace">
+    <aside class="col-lg-3 col-xl-2 d-none d-lg-block col-pane border-start p-3" id="leftDesktop"></aside>
+    <section class="col-12 col-lg-6 col-xl-7 col-pane p-3">
+      <div class="mapwrap mb-3 anim-drop position-relative">
+        <svg class="map" viewBox="0 0 400 280" id="svgmap"></svg>
+      </div>
+      <h6 class="sec" id="regtitle">کل کشور</h6>
+      <div class="row g-2" id="dash"></div>
+      <h6 class="sec mt-3">پیامدهای زنجیره‌ای</h6>
+      <div class="small text-secondary" id="chain"></div>
+      <h6 class="sec mt-3">اقتصاد و رضایت</h6>
+      <div class="row g-2" id="eco"></div>
+    </section>
+    <aside class="col-lg-3 d-none d-lg-block col-pane border-end p-3" id="rightDesktop"></aside>
+  </div>
+</div>
+
+<footer class="foot d-flex align-items-center gap-2 px-2 px-md-3">
+  <span id="warns" class="text-truncate">بدون هشدار فعال</span>
+  <div class="ms-auto d-flex gap-1 flex-wrap justify-content-end">
+    <button class="btn btn-nx btn-sm" onclick="saveGame()">ذخیره</button>
+    <button class="btn btn-nx btn-sm" onclick="loadGame()">بارگذاری</button>
+    <button class="btn btn-nx btn-sm" onclick="newGame()">جدید</button>
+    <button class="btn btn-nx btn-sm" data-bs-toggle="modal" data-bs-target="#tut" onclick="sfx('open')">آموزش</button>
+  </div>
+</footer>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="leftNav"><div class="offcanvas-header"><h6 class="offcanvas-title">مناطق</h6><button class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body" id="leftMobile"></div></div>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="rightNav"><div class="offcanvas-header"><h6 class="offcanvas-title">COMMAND</h6><button class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button></div><div class="offcanvas-body" id="rightMobile"></div></div>
+
+<div class="modal fade" id="tut" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content p-3">
+  <h5 class="text-info">آموزش مرکز کنترل NEXUS</h5>
+  <p class="small mb-2">شما رئیس‌جمهور نیستید. این کنسول تنها نقطهٔ دسترسی به زیرساخت آروندیا است. منطقه را انتخاب کنید، شدت را بگذارید، فرمان بدهید. مردم حرف می‌زنند؛ جواب‌تان یادشان می‌ماند.</p>
+  <button class="btn btn-nx" data-bs-dismiss="modal" onclick="sfx('ok')">ورود به هسته</button>
+</div></div></div>
+<div class="fx-toast" id="toasts"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const SYS=['برق','آب','گاز','سوخت','اینترنت','موبایل','حمل‌ونقل','بانک','پسماند','درمان','توزیع‌کالا'];
+const SYSKEY=['power','water','gas','fuel','net','mobile','transit','bank','waste','health','supply'];
+const COUNTRY={id:'ARV',name:'آروندیا',kids:[
+  {id:'N',name:'استان شمال‌آبی',kids:[{id:'N1',name:'شهر بندرخیز'},{id:'N2',name:'شهر مهردشت'},{id:'N3',name:'روستای سفیدکوه'}]},
+  {id:'C',name:'استان مرکزی',kids:[{id:'C1',name:'پایتخت آروندشهر'},{id:'C2',name:'شهر صنعتی فولادان'},{id:'C3',name:'منطقهٔ کشاورزی دشت‌نور'}]},
+  {id:'S',name:'استان جنوب‌گرم',kids:[{id:'S1',name:'بندر نفت‌سان'},{id:'S2',name:'شهر نخلستان'},{id:'S3',name:'جزیرهٔ مرجان'}]},
+  {id:'E',name:'استان شرق‌کوه',kids:[{id:'E1',name:'شهر معدن‌پایه'},{id:'E2',name:'درهٔ یخ‌رود'}]}
+]};
+const POLYS={N:'M40,20 L180,18 L170,90 L30,95 Z',C:'M170,90 L250,80 L240,170 L80,175 L30,95 Z',S:'M80,175 L240,170 L260,250 L50,255 Z',E:'M250,80 L370,40 L380,160 L240,170 Z'};
+function flatRegions(){const a=[{id:'ARV',name:'کل کشور',level:0}];COUNTRY.kids.forEach(p=>{a.push({id:p.id,name:p.name,level:1,parent:'ARV'});p.kids.forEach(c=>a.push({id:c.id,name:c.name,level:2,parent:p.id}));});return a;}
+const REGS=flatRegions();
+const baseInfra=()=>{const o={};SYSKEY.forEach(k=>o[k]=100);return o};
+let S={day:1,hour:8,tick:0,sel:'ARV',infra:{},eco:{gdp:100,prices:100,unemp:8,stock:92,energy:78},mood:72,hist:[],queue:[],talks:[],events:[],alerts:[],socialMem:[]};
+REGS.forEach(r=>S.infra[r.id]=baseInfra());
+
+/* ===== WebAudio: 10 صدا ===== */
+let AC=null;
+function ac(){if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); return AC;}
+function beep(freq,dur,type='square',gain=.05,slide=0){
+  const ctx=ac(),o=ctx.createOscillator(),g=ctx.createGain();
+  o.type=type;o.frequency.value=freq;g.gain.value=gain;
+  o.connect(g);g.connect(ctx.destination);o.start();
+  if(slide) o.frequency.linearRampToValueAtTime(freq+slide,ctx.currentTime+dur);
+  g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);o.stop(ctx.currentTime+dur);
+}
+function noise(dur,g0=.04){
+  const ctx=ac(),n=ctx.createBufferSource(),buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate);
+  const d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1;
+  n.buffer=buf; const f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=900;
+  const g=ctx.createGain(); g.gain.value=g0; n.connect(f);f.connect(g);g.connect(ctx.destination);
+  n.start(); g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);
+}
+const SFX={
+  click(){beep(720,.05,'square',.04)},
+  open(){beep(240,.12,'triangle',.05,180)},
+  ok(){beep(520,.08,'sine',.05);setTimeout(()=>beep(740,.1,'sine',.05),80)},
+  warn(){beep(180,.2,'sawtooth',.06);setTimeout(()=>beep(160,.2,'sawtooth',.05),160)},
+  alert(){beep(420,.15,'square',.07);setTimeout(()=>beep(280,.2,'square',.07),140)},
+  cmd(){beep(140,.08,'square',.06,400);noise(.12,.03)},
+  tick(){beep(880,.03,'square',.02)},
+  chat(){beep(660,.04,'sine',.03);setTimeout(()=>beep(540,.05,'sine',.03),50)},
+  blackout(){beep(90,.4,'sawtooth',.08,-40);noise(.3,.05)},
+  restore(){beep(300,.1,'triangle',.05,200);setTimeout(()=>beep(600,.12,'triangle',.04),120)}
+};
+function sfx(n){try{SFX[n]&&SFX[n]()}catch(e){}}
+
+function regionIds(sel){if(sel==='ARV') return REGS.map(r=>r.id);return [sel,...REGS.filter(r=>r.parent===sel).map(r=>r.id)];}
+function avg(key,sel){const ids=regionIds(sel).filter(id=>S.infra[id]);return Math.round(ids.reduce((s,id)=>s+S.infra[id][key],0)/ids.length);}
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+function applyCascade(ids){ids.forEach(id=>{const I=S.infra[id];if(!I)return;
+  if(I.power<40){I.water=Math.min(I.water,I.power+25);I.net=Math.min(I.net,I.power+15);I.transit=Math.min(I.transit,I.power+20);I.bank=Math.min(I.bank,I.power+30);I.health=Math.min(I.health,I.power+20)}
+  if(I.water<35){I.health=Math.min(I.health,I.water+25);I.supply=Math.min(I.supply,I.water+30)}
+  if(I.fuel<40){I.transit=Math.min(I.transit,I.fuel+15);I.supply=Math.min(I.supply,I.fuel+20)}
+  if(I.net<30){I.bank=Math.min(I.bank,I.net+20);I.mobile=Math.min(I.mobile,I.net+25)}
+  if(I.waste<40){I.health=Math.min(I.health,I.waste+35)}
+});}
+function tickEconomy(){
+  const p=avg('power','ARV'),w=avg('water','ARV'),f=avg('fuel','ARV'),n=avg('net','ARV'),h=avg('health','ARV'),s=avg('supply','ARV');
+  const infra=(p+w+f+n+h+s)/6;
+  S.eco.gdp=clamp(S.eco.gdp+(infra-70)*0.04-(100-S.mood)*0.01,20,160);
+  S.eco.prices=clamp(S.eco.prices+(100-s)*0.03+(100-f)*0.02,70,220);
+  S.eco.unemp=clamp(S.eco.unemp+(70-infra)*0.02,3,40);
+  S.eco.stock=clamp(S.eco.stock+(s-80)*0.05-(S.eco.prices-100)*0.02,10,100);
+  S.eco.energy=clamp((p+f)/2,0,100);
+  S.mood=clamp(S.mood-((100-infra)*0.08+(S.eco.prices-100)*0.03+(S.eco.unemp-8)*0.2)*0.15+(infra>85?0.2:0),5,98);
+}
+function consequences(cmd){
+  const short=[],mid=[],lon=[];
+  if(cmd.sys==='power'&&cmd.val<50){short.push('چراغ‌ها و آسانسور خوابیدن');mid.push('خط تولید کم‌کار می‌شه');lon.push('اعتماد به شبکه برق می‌ریزه')}
+  if(cmd.sys==='net'&&cmd.val<40){short.push('کارتخوان و پرداخت قفل می‌شه');mid.push('دورکاری و کلاس آنلاین می‌خوابه');lon.push('کسب‌وکارها کوچ می‌کنن')}
+  if(cmd.sys==='fuel'&&cmd.val<50){short.push('صف جایگاه کش می‌آد');mid.push('بار گرون‌تر می‌رسه');lon.push('لجستیک قفل می‌شه')}
+  if(cmd.sys==='water'&&cmd.val<45){short.push('شیرها سوت می‌کشن');mid.push('بهداشت محله ضعیف می‌شه');lon.push('آدم‌ها از منطقه می‌رن')}
+  if(cmd.sys==='health'&&cmd.val<60){short.push('اورژانس پر می‌شه');mid.push('دارو کم می‌آد');lon.push('امید به درمان می‌ریزه')}
+  if(!short.length){short.push('ظرفیت کمی جابه‌جا شد');mid.push('مصرف خودش رو تنظیم می‌کنه');lon.push('تو حافظه عملیاتی می‌مونه')}
+  return {short,mid,lon};
+}
+
+const PEOPLE=[
+  {n:'رعنا',job:'پرستار شیفت شب',tone:'تند'},
+  {n:'کیان',job:'راننده اسنپ',tone:'خسته'},
+  {n:'نادر',job:'صاحب سوپر محله',tone:'حسابگر'},
+  {n:'سارا',job:'دانشجو',tone:'طعنه'},
+  {n:'بهرام',job:'کارگر فولادان',tone:'مستقیم'},
+  {n:'لیلا',job:'مامان دو بچه',tone:'نگران'},
+  {n:'آرمان',job:'برنامه‌نویس دورکار',tone:'عصبی‌فنی'},
+  {n:'مهسا',job:'معلم',tone:'آروم'},
+  {n:'پوریا',job:'ماهیگیر بندر',tone:'شکایت‌محلی'},
+  {n:'ستایش',job:'داروخانه‌دار',tone:'عملی'}
+];
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function hourFeel(){if(S.hour<6)return 'نصف‌شب';if(S.hour<12)return 'صبح';if(S.hour<17)return 'ظهر';if(S.hour<21)return 'عصر';return 'شب';}
+function memHit(keys){return S.socialMem.slice(-12).find(m=>keys.some(k=>String(m).includes(k)))}
+function lineFor(p,city){
+  const I=S.infra[city.id]; const t=hourFeel();
+  const ignored=!!memHit(['بی‌توجهی','ignore']);
+  const helped=!!memHit(['کمک فوری','aid']);
+  const warned=!!memHit(['هشدار','warn']);
+  const cutP=I.power<40, cutN=I.net<35, cutF=I.fuel<40, cutW=I.water<40, pricy=S.eco.prices>140, ok=S.mood>75&&I.net>80&&I.power>80;
+  let a,b;
+  if(cutP){
+    const bag=[
+      [`${t}ه، برق زد قطع. یخچال داره یخاش آب می‌شه.`,`بچه‌ها تو تاریکی هِر هِر می‌کنن، منم چراغ‌قوه دستمه.`],
+      [`سه ساعته آسانسور خوابیده، طبقه پنجم با کیف خرید.`,`همسایه می‌گه دوباره مثل هفته پیش می‌شه.`],
+      [`تو بیمارستان ژنراتور داره سرفه می‌کنه.`,`اگه برق برنگرده شیفت بعد قاطی می‌کنیم.`]
+    ];
+    [a,b]=pick(bag);
+    if(memHit(['power'])) b+=' یادمه قبلیشم قول دادن درست می‌کنن.';
+  } else if(cutN){
+    const bag=[
+      [`نت عملاً مرده‌؛ کارتخوان بوق خطا می‌زنه.`,`مشتری می‌گه کارت بکشه، من می‌گم نقد بیار، دعوا می‌شه.`],
+      [`دورکاری‌م خوابید. فایل نیم‌ساعته هنوز آپلود نشده.`,`اگه فردا هم همین‌طور باشه پروژه‌م می‌سوزه.`],
+      [`پیام‌رسان باز نمی‌شه، مامانم زنگ می‌زنه که زنده‌ای یا نه.`,`انگار کشور رفته تو تونل.`]
+    ];[a,b]=pick(bag);
+  } else if(cutF){
+    [a,b]=pick([
+      [`جایگاه نوبت فرداست. باک روی رزروه‌ست.`,`کرایه رو کردن دو برابر، کسی هم حق نمی‌ده.`],
+      [`گازوئیل نیومده، وانت بار نزده.`,`میوه‌ها دارن می‌گندن تو صندوق.`]
+    ]);
+  } else if(cutW){
+    [a,b]=pick([
+      [`شیر سوت می‌کشه، قطره قطره.`,`برای دستشویی سطلی گذاشتیم پشت در.`],
+      [`بوی فاضلاب اومده تو راهرو.`,`می‌گن تصفیه‌خانه کم آورده.`]
+    ]);
+  } else if(pricy){
+    [a,b]=pick([
+      [`روغن شده قصه. قفسه خالیه.`,`دارم جنس رو زیر پیشخوان نگه می‌دارم برای مشتری ثابت.`],
+      [`با این قیمتا ناهار شده نان‌و‌پنیر.`,`بچه می‌پرسه چرا گوشت نمی‌خریم، چی بگم؟`]
+    ]);
+  } else if(ok){
+    [a,b]=pick([
+      [`امروز نت کشید، یه نفس راحت.`,`کاش همین‌جوری بمونه، نه اینکه فردا پشیمان شید.`],
+      [`چراغ‌ها ثابته، خیابون آروم‌تره.`,`آدمای محله دارن می‌گن شاید دست‌تون درد نکنه.`]
+    ]);
+  } else {
+    [a,b]=pick([
+      [`وضع از دیروز یه ذره بهتره، ولی هنوز دلهره‌ست.`,`کسی باور نمی‌کنه پایدار باشه.`],
+      [`خبری نیست، خودِ خبره.`,`منتظرین یه چیز دیگه بپره.`]
+    ]);
+  }
+  if(ignored) b='دفه پیش هیچی نگفتین. مردم دیگه حرف‌تونو گوش نمی‌دن. '+b;
+  if(helped && Math.random()>.4) b='حداقل دفعه قبل یه کم کمک رسید. '+b;
+  if(warned) b='با لحن اخطار که دل کسی گرم نمی‌شه. '+b;
+  if(p.tone==='طعنه') a='واه، چه غافلگیری. '+a;
+  if(p.job.includes('پرستار')&&I.health<60) b='تو اورژانس تخت خالی نداریم، جدی می‌گم.';
+  if(p.job.includes('برنامه‌نویس')&&I.net<50) a='پینگ شده سه‌هزار. دارم با وای‌فای همسایه زندگی می‌کنم.';
+  return [a,b];
+}
+function genTalks(){
+  const cities=REGS.filter(r=>r.level===2);
+  const out=[];
+  for(let i=0;i<4;i++){
+    const c=pick(cities), p=pick(PEOPLE);
+    const [a,b]=lineFor(p,c);
+    out.push({id:Date.now()+i+Math.random(),who:`${p.n} · ${p.job} — ${c.name}`,text:a+'\n'+b,city:c.id,person:p.n});
+  }
+  S.talks=out; sfx('chat');
+}
+function replyTalk(id,kind){
+  const t=S.talks.find(x=>x.id===id);
+  if(kind==='calm'){S.mood=clamp(S.mood+1.1,5,98);S.socialMem.push('آرام‌سازی'); toast('لحن آرام پخش شد'); sfx('ok');}
+  if(kind==='aid'){if(t){['water','supply','health'].forEach(k=>S.infra[t.city][k]=clamp(S.infra[t.city][k]+8,0,100));} S.mood=clamp(S.mood+2.2,5,98);S.socialMem.push('کمک فوری'); toast('کمک محلی فعال شد'); sfx('restore');}
+  if(kind==='ignore'){S.mood=clamp(S.mood-2.8,5,98);S.socialMem.push('بی‌توجهی'); toast('سکوت مرکز ثبت شد'); sfx('warn');}
+  if(kind==='warn'){S.mood=clamp(S.mood-1.2,5,98);S.socialMem.push('هشدار'); toast('اخطار به شهروند'); sfx('alert');}
+  S.socialMem=S.socialMem.slice(-40);
+  genTalks(); render();
+}
+
+function execCmd(cmd){
+  const ids=regionIds(cmd.region);
+  ids.forEach(id=>{if(S.infra[id]) S.infra[id][cmd.sys]=cmd.val});
+  applyCascade(ids);
+  cmd.cons=consequences(cmd);
+  S.hist.unshift(cmd); if(S.hist.length>80)S.hist.pop();
+  S.socialMem.push(`${cmd.sys}@${cmd.region}=${cmd.val}`);
+  if(cmd.val<30){S.alerts.push('سرویس بحرانی: '+labelSys(cmd.sys)); sfx('blackout'); flashMap();}
+  else sfx('cmd');
+  tickEconomy(); toast(`${labelSys(cmd.sys)} → ${cmd.val}٪ در ${labelReg(cmd.region)}`);
+}
+const labelSys=k=>SYS[SYSKEY.indexOf(k)]||k;
+const labelReg=id=>(REGS.find(r=>r.id===id)||{}).name||id;
+function readCmd(){return {t:S.day+':'+S.hour,region:S.sel,sys:document.querySelector('.js-sys').value,val:+document.querySelector('.js-inten').value,delay:+document.querySelector('.js-delay').value||0};}
+function queueCmd(){S.queue.push({...readCmd(),done:false}); sfx('open'); render();}
+function execNow(){execCmd(readCmd()); genTalks(); render();}
+function undoLast(){const last=S.hist[0]; if(!last||last.sys==='log') return; const ids=regionIds(last.region); ids.forEach(id=>{if(S.infra[id]) S.infra[id][last.sys]=clamp(last.val+(100-last.val)*0.5,0,100);}); S.hist.shift(); sfx('restore'); render();}
+
+function randomEvent(){
+  if(Math.random()>0.2) return;
+  const pool=[
+    {n:'خرابی توربین نیروگاه مرکزی',fn(){S.infra.C.power=clamp(S.infra.C.power-35,0,100);S.infra.C1.power=clamp(S.infra.C1.power-40,0,100)}},
+    {n:'موج گرما در جنوب‌گرم',fn(){regionIds('S').forEach(id=>{S.infra[id].water-=15;S.infra[id].power-=10})}},
+    {n:'قطع کابل دریایی اینترنت',fn(){S.infra.S3.net=10;S.infra.S.net=30}},
+    {n:'کمبود سوخت در بندر نفت‌سان',fn(){S.infra.S1.fuel=25;S.infra.S.fuel=40}},
+    {n:'ازدحام مترو پایتخت',fn(){S.infra.C1.transit=35}},
+    {n:'خشکسالی دشت‌نور',fn(){S.infra.C3.water=28;S.infra.C3.supply=40}},
+    {n:'نقص تصفیه‌خانه مهردشت',fn(){S.infra.N2.waste=30;S.infra.N2.health=45}}
+  ];
+  const e=pick(pool); e.fn(); applyCascade(REGS.map(r=>r.id));
+  S.events.unshift({t:`روز ${S.day} ${pad(S.hour)}:۰۰`,n:e.n});
+  S.alerts.push(e.n); sfx('alert'); toast('رویداد: '+e.n); flashMap();
+}
+const pad=n=>String(n).padStart(2,'0');
+function advance(){
+  S.hour++; S.tick++; if(S.hour>=24){S.hour=0;S.day++}
+  S.queue.forEach(q=>{if(!q.done){q.delay--; if(q.delay<=0){execCmd(q);q.done=true}}});
+  S.queue=S.queue.filter(q=>!q.done);
+  if(S.tick%3===0) tickEconomy();
+  if(S.tick%4===0) genTalks();
+  if(S.hour===7||S.hour===19) randomEvent();
+  if(S.mood>80 && S.tick%6===0) REGS.forEach(r=>SYSKEY.forEach(k=>S.infra[r.id][k]=clamp(S.infra[r.id][k]+0.4,0,100)));
+  sfx('tick'); render();
+}
+const tone=v=>v<35?'bad':v<65?'warn':'ok';
+
+function leftHTML(){
+  let h=`<h6 class="sec">انتخاب منطقه</h6><div class="tree">`;
+  h+=`<button class="btn btn-sm ${S.sel==='ARV'?'active':''}" onclick="sel('ARV')">کل کشور — آروندیا</button>`;
+  COUNTRY.kids.forEach(p=>{
+    h+=`<button class="btn btn-sm lv2 ${S.sel===p.id?'active':''}" onclick="sel('${p.id}')">${p.name}</button>`;
+    p.kids.forEach(c=>h+=`<button class="btn btn-sm lv3 ${S.sel===c.id?'active':''}" onclick="sel('${c.id}')">${c.name}</button>`);
+  });
+  h+=`</div><h6 class="sec mt-3">رویدادها</h6><div class="small text-secondary" id="eventsSlot">${S.events.slice(0,6).map(e=>`${e.t} — ${e.n}`).join('<br>')||'آرام'}</div>`;
+  h+=`<h6 class="sec mt-3">تاریخچه</h6><div class="small text-secondary">${S.hist.slice(0,10).map(h=>`${h.t} | ${labelReg(h.region)} | ${h.sys==='log'?h.val:labelSys(h.sys)+' → '+h.val+'٪'}`).join('<br>')||'—'}</div>`;
+  return h;
+}
+function rightHTML(){
+  const sysOpts=SYSKEY.map((k,i)=>`<option value="${k}" ${document.querySelector('.js-sys')?.value===k?'selected':''}>${SYS[i]}</option>`).join('');
+  const val=document.querySelector('.js-inten')?.value||100;
+  const del=document.querySelector('.js-delay')?.value||0;
+  return `<h6 class="sec">COMMAND CENTER</h6>
+    <label class="form-label small text-secondary mb-1">سیستم</label>
+    <select class="form-select form-select-sm js-sys mb-2">${sysOpts}</select>
+    <label class="form-label small text-secondary mb-1">شدت سرویس (%)</label>
+    <input type="range" class="form-range js-inten" min="0" max="100" value="${val}" oninput="syncSliders(this.value)">
+    <div class="mono text-warning small mb-2 js-intenlbl">${val}٪</div>
+    <label class="form-label small text-secondary mb-1">تأخیر (ساعت بازی)</label>
+    <input type="number" class="form-control form-control-sm js-delay mb-2" min="0" max="48" value="${del}">
+    <div class="d-grid gap-2">
+      <button class="btn btn-nx btn-sm" onclick="queueCmd()">صف فرمان</button>
+      <button class="btn btn-nx btn-sm anim-glow" onclick="execNow()">اجرای فوری</button>
+      <button class="btn btn-nx btn-sm" onclick="undoLast()">بازگشت آخرین</button>
+    </div>
+    <div class="small text-secondary mt-2">${S.queue.length?S.queue.map(q=>`⏳ ${labelSys(q.sys)} ${q.val}٪ — ${labelReg(q.region)} — ${q.delay}h`).join('<br>'):'صف خالی'}</div>
+    <h6 class="sec mt-3">مکالمات مردم</h6>
+    ${S.talks.map(t=>`<div class="talk p-2 mb-2"><div class="who">${t.who}</div><div class="small">${t.text.replace(/\n/g,'<br>')}</div>
+      <div class="d-flex flex-wrap gap-1 mt-2">
+        <button class="btn btn-nx btn-sm" onclick="replyTalk(${t.id},'calm')">آروم کن</button>
+        <button class="btn btn-nx btn-sm" onclick="replyTalk(${t.id},'aid')">کمک بده</button>
+        <button class="btn btn-nx btn-sm" onclick="replyTalk(${t.id},'warn')">اخطار</button>
+        <button class="btn btn-nx btn-sm" onclick="replyTalk(${t.id},'ignore')">بی‌خیال</button>
+      </div></div>`).join('')}`;
+}
+function sel(id){S.sel=id;sfx('click');render(); document.querySelectorAll('.offcanvas.show').forEach(el=>bootstrap.Offcanvas.getInstance(el)?.hide());}
+function renderMap(){
+  document.getElementById('svgmap').innerHTML=Object.entries(POLYS).map(([id,d])=>{
+    const on=S.sel===id||S.sel==='ARV'||(REGS.find(r=>r.id===S.sel)||{}).parent===id;
+    return `<path class="poly ${on?'sel anim-map':''}" d="${d}" onclick="sel('${id}')"/>`;
+  }).join('')+`<text x="70" y="55" fill="#8cf" font-size="11">شمال‌آبی</text><text x="120" y="130" fill="#8cf" font-size="11">مرکزی</text><text x="130" y="215" fill="#8cf" font-size="11">جنوب‌گرم</text><text x="290" y="110" fill="#8cf" font-size="11">شرق‌کوه</text>`;
+}
+function meter(v){return `<div class="meter ${tone(v)}"><i style="width:${v}%"></i></div>`}
+function render(){
+  document.getElementById('daylbl').textContent=`روز ${S.day} — ${pad(S.hour)}:۰۰`;
+  document.getElementById('kpis').innerHTML=`
+    <div class="kpi ${tone(S.mood)}"><s>رضایت</s><b>${S.mood.toFixed(0)}</b></div>
+    <div class="kpi ${tone(avg('power','ARV'))}"><s>برق</s><b>${avg('power','ARV')}٪</b></div>
+    <div class="kpi ${tone(avg('net','ARV'))}"><s>شبکه</s><b>${avg('net','ARV')}٪</b></div>
+    <div class="kpi ${S.eco.prices>130?'bad':'ok'}"><s>قیمت</s><b>${S.eco.prices.toFixed(0)}</b></div>`;
+  const w=S.alerts.slice(-2).join(' • ');
+  document.getElementById('warns').innerHTML=w?`<span class="alert-live">⚠ ${w}</span>`:'بدون هشدار فعال';
+  const L=leftHTML();
+  document.getElementById('leftDesktop').innerHTML=L;
+  document.getElementById('leftMobile').innerHTML=L;
+  const R=rightHTML();
+  document.getElementById('rightDesktop').innerHTML=R;
+  document.getElementById('rightMobile').innerHTML=R;
+  document.getElementById('regtitle').textContent=labelReg(S.sel);
+  document.getElementById('dash').innerHTML=SYSKEY.map((k,i)=>`<div class="col-6 col-md-4 col-xl-3"><div class="infra-card p-2 h-100 anim-rise"><div class="small text-secondary">${SYS[i]}</div><div class="v ${tone(avg(k,S.sel))}">${avg(k,S.sel)}٪</div>${meter(avg(k,S.sel))}</div></div>`).join('');
+  const last=S.hist[0]; const cons=last&&last.cons?last.cons:{short:['هنوز فرمانی ثبت نشده'],mid:['—'],lon:['—']};
+  document.getElementById('chain').innerHTML=`<b>کوتاه:</b> ${cons.short.join('؛ ')}<br><b>میان:</b> ${cons.mid.join('؛ ')}<br><b>بلند:</b> ${cons.lon.join('؛ ')}`;
+  document.getElementById('eco').innerHTML=`
+    <div class="col-6 col-md-4"><div class="infra-card p-2"><div class="small text-secondary">تولید</div><div class="v">${S.eco.gdp.toFixed(0)}</div></div></div>
+    <div class="col-6 col-md-4"><div class="infra-card p-2"><div class="small text-secondary">قیمت</div><div class="v ${S.eco.prices>130?'text-danger':''}">${S.eco.prices.toFixed(0)}</div></div></div>
+    <div class="col-6 col-md-4"><div class="infra-card p-2"><div class="small text-secondary">بیکاری</div><div class="v">${S.eco.unemp.toFixed(1)}٪</div></div></div>
+    <div class="col-6 col-md-4"><div class="infra-card p-2"><div class="small text-secondary">موجودی</div><div class="v">${S.eco.stock.toFixed(0)}٪</div></div></div>
+    <div class="col-12 col-md-8"><div class="infra-card p-2"><div class="small text-secondary">رضایت عمومی</div><div class="v ${tone(S.mood)}">${S.mood.toFixed(0)}</div>${meter(S.mood)}</div></div>`;
+  renderMap();
+}
+function syncSliders(v){document.querySelectorAll('.js-inten').forEach(el=>el.value=v);document.querySelectorAll('.js-intenlbl').forEach(el=>el.textContent=v+'٪');}
+function toast(msg){
+  const el=document.createElement('div');
+  el.className='alert alert-dark border-info py-2 px-3 mb-2 anim-drop small';
+  el.textContent=msg; document.getElementById('toasts').prepend(el);
+  setTimeout(()=>el.remove(),3200);
+}
+function flashMap(){document.querySelector('.mapwrap')?.classList.add('anim-shake','anim-siren'); setTimeout(()=>document.querySelector('.mapwrap')?.classList.remove('anim-shake','anim-siren'),700);}
+function saveGame(){localStorage.setItem('nexus_arv',JSON.stringify(S));toast('ذخیره شد');sfx('ok');}
+function loadGame(){const x=localStorage.getItem('nexus_arv'); if(!x) return toast('ذخیره‌ای نیست'); S=JSON.parse(x); render(); toast('بارگذاری شد'); sfx('open');}
+function newGame(){location.reload()}
+
+document.addEventListener('click',()=>{try{ac()}catch(e){}},{once:true});
+let boot=0;
+const bi=setInterval(()=>{
+  boot+=20; document.getElementById('bfill').style.width=boot+'%';
+  document.getElementById('bmsg').textContent=['هسته رمز…','شبکه انتقال…','نقشه استانی…','ماژول اجتماعی…','آماده.'][Math.min(4,Math.floor(boot/25))];
+  if(boot>=100){
+    clearInterval(bi);
+    document.getElementById('boot').style.display='none';
+    genTalks(); render();
+    const m=new bootstrap.Modal('#tut'); m.show();
+    setInterval(advance,4000);
+  }
+},180);
+</script>
+</body>
+</html>
