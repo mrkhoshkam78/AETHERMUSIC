@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>موتور هوش دانش — KIE</title>
+<meta name="description" content="موتور دانش آفلاین؛ جمع‌آوری، سازمان‌دهی، جست‌وجو و بازیابی هوشمند اطلاعات"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root, [data-theme="dark"] {
+  --bg: #0a0c10;
+  --surface: #11141a;
+  --card: #161a22;
+  --card-elevated: #1a1f2a;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --text: #f0f2f5;
+  --text-2: #8b93a7;
+  --text-3: #5a6275;
+  --accent: #6b8cff;
+  --accent-soft: rgba(107,140,255,0.14);
+  --glow: rgba(107,140,255,0.18);
+  --success: #3dd68c;
+  --warning: #f5a623;
+  --danger: #ff6b6b;
+  --btn-primary-bg: #ffffff;
+  --btn-primary-fg: #0a0c10;
+  --logo: #f0f2f5;
+  --hero-title: rgba(255,255,255,0.045);
+  --shadow: 0 40px 80px -20px rgba(0,0,0,.55);
+  --nav-bg: rgba(10,12,16,0.75);
+  --overlay: rgba(0,0,0,0.65);
+  --radius: 28px;
+  --radius-sm: 16px;
+  --radius-xs: 10px;
+  --font: 'Vazirmatn', 'Inter', system-ui, sans-serif;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+[data-theme="light"] {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --card-elevated: #f8f9fb;
+  --border: rgba(0,0,0,0.08);
+  --border-hover: rgba(0,0,0,0.16);
+  --text: #11141a;
+  --text-2: #5a6275;
+  --text-3: #8b93a7;
+  --accent: #3d5afe;
+  --accent-soft: rgba(61,90,254,0.1);
+  --glow: rgba(61,90,254,0.12);
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --btn-primary-bg: #11141a;
+  --btn-primary-fg: #ffffff;
+  --logo: #11141a;
+  --hero-title: rgba(0,0,0,0.04);
+  --shadow: 0 40px 80px -20px rgba(0,0,0,.12);
+  --nav-bg: rgba(244,245,247,0.85);
+  --overlay: rgba(0,0,0,0.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .35s var(--ease),color .25s}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;color:inherit}
+#app{min-height:100vh;display:flex;flex-direction:column}
+.logo-eye{width:28px;height:18px;display:block;flex-shrink:0}
+.logo-eye path{fill:var(--logo);transition:fill .3s}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 36px;background:var(--nav-bg);backdrop-filter:blur(20px) saturate(1.3);border-bottom:1px solid transparent;transition:border-color .3s,background .35s}
+.nav.scrolled{border-bottom-color:var(--border)}
+.nav-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:-0.02em}
+.nav-brand .brand-text{display:flex;flex-direction:column;line-height:1.15}
+.nav-brand .brand-name{font-size:14px;font-weight:700}
+.nav-brand .brand-ver{font-size:10px;color:var(--text-3);font-weight:500}
+.nav-links{display:flex;align-items:center;gap:22px}
+.nav-links a{font-size:13px;font-weight:500;color:var(--text-2);transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links .nav-cta{background:var(--btn-primary-bg);color:var(--btn-primary-fg);padding:8px 18px;border-radius:999px;font-size:12.5px;font-weight:600;transition:opacity .2s,transform .2s}
+.nav-links .nav-cta:hover{opacity:.88;transform:translateY(-1px)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.theme-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;font-size:16px;color:var(--text-2);transition:all .25s;background:var(--surface)}
+.theme-btn:hover{border-color:var(--border-hover);color:var(--text)}
+.nav-toggle{display:none;font-size:22px;color:var(--text-2)}
+.hero-wrap{padding:100px 24px 36px;display:flex;justify-content:center}
+.hero-card{width:100%;max-width:1080px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:48px 56px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:32px;align-items:center;position:relative;overflow:hidden;box-shadow:var(--shadow);transition:background .35s,border-color .35s}
+.hero-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 50% at 28% 42%,var(--glow),transparent 70%);pointer-events:none}
+.hero-visual{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:300px}
+.hero-title-bg{position:absolute;font-size:clamp(64px,11vw,128px);font-weight:800;letter-spacing:-0.05em;color:var(--hero-title);line-height:.85;user-select:none;left:0;top:50%;transform:translateY(-50%);white-space:nowrap}
+.hero-orb{width:200px;height:200px;border-radius:50%;background:var(--surface);border:1px solid var(--border-hover);box-shadow:0 0 0 1px var(--accent-soft),0 28px 56px -14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,0.04);display:grid;place-items:center;position:relative;z-index:2;animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-orb .logo-eye{width:72px;height:46px}
+.hero-orb .orb-ring{position:absolute;inset:-16px;border-radius:50%;border:1px dashed color-mix(in srgb,var(--accent) 25%,transparent);animation:spin 28s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-copy{position:relative;z-index:1}
+.hero-copy .eyebrow{font-size:12px;font-weight:500;color:var(--text-3);letter-spacing:.03em;margin-bottom:12px}
+.hero-copy h1{font-size:clamp(26px,3.2vw,38px);font-weight:700;letter-spacing:-0.02em;line-height:1.25;margin-bottom:12px}
+.hero-copy .price{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:14px}
+.hero-copy p{font-size:14px;color:var(--text-2);line-height:1.75;margin-bottom:26px;max-width:360px}
+.hero-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn-pill{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;font-size:13.5px;font-weight:600;transition:all .25s var(--ease)}
+.btn-pill.primary{background:var(--btn-primary-bg);color:var(--btn-primary-fg)}
+.btn-pill.primary:hover{transform:translateY(-1px);opacity:.9}
+.btn-pill.ghost{background:transparent;color:var(--text-2);border:1px solid var(--border-hover)}
+.btn-pill.ghost:hover{border-color:var(--text-3);color:var(--text)}
+.hero-dots{display:flex;gap:6px;margin-top:24px}
+.hero-dots span{width:6px;height:6px;border-radius:50%;background:var(--text-3);opacity:.4}
+.hero-dots span.on{opacity:1;background:var(--accent);width:16px;border-radius:3px}
+.detail-wrap{padding:16px 24px 48px;display:flex;justify-content:center}
+.detail-card{width:100%;max-width:1080px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:44px 52px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;box-shadow:var(--shadow);transition:background .35s,border-color .35s}
+.spec-row{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.spec-row:last-of-type{border-bottom:none}
+.spec-label{color:var(--text-3);font-weight:500}
+.spec-value{color:var(--text);font-weight:500}
+.spec-value.muted{color:var(--text-2);font-weight:400;line-height:1.65}
+.feature-icons{display:flex;gap:18px;margin-top:18px;flex-wrap:wrap}
+.feature-icon{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--text-3);font-weight:500}
+.feature-icon .fi{width:40px;height:40px;border-radius:50%;border:1px solid var(--border-hover);display:grid;place-items:center;font-size:15px;background:var(--surface)}
+.color-dots{display:flex;gap:8px;margin-top:6px}
+.color-dots i{width:14px;height:14px;border-radius:50%;border:2px solid transparent;display:block}
+.color-dots i.on{border-color:var(--text);box-shadow:0 0 0 1px var(--bg)}
+.detail-visual{display:flex;align-items:center;justify-content:center;position:relative;min-height:260px}
+.detail-device{width:150px;height:260px;border-radius:36px;background:var(--surface);border:1px solid var(--border-hover);box-shadow:0 32px 48px -16px rgba(0,0,0,.25);position:relative;display:flex;flex-direction:column;align-items:center;padding:24px 0}
+.detail-device .cam{width:11px;height:11px;border-radius:50%;background:var(--bg);border:1px solid var(--border-hover);margin-bottom:auto}
+.detail-device .screen{width:68%;flex:1;border-radius:12px;background:linear-gradient(180deg,var(--accent-soft),transparent);border:1px solid color-mix(in srgb,var(--accent) 12%,transparent);margin:14px 0;display:grid;place-items:center}
+.detail-device .screen .logo-eye{width:36px;height:23px;opacity:.7}
+.detail-device .bar{width:32px;height:3px;border-radius:2px;background:var(--text-3);opacity:.3}
+.detail-side{width:84px;height:180px;border-radius:26px;background:var(--card-elevated);border:1px solid var(--border);margin-right:-26px;margin-top:28px;box-shadow:0 16px 32px -12px rgba(0,0,0,.2);position:relative;z-index:1}
+.side-dots{position:absolute;left:-36px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px}
+.side-dots span{width:5px;height:5px;border-radius:50%;background:var(--text-3);opacity:.35}
+.side-dots span.on{opacity:1;background:var(--accent)}
+.workspace{padding:0 24px 72px;max-width:1080px;margin:0 auto;width:100%;display:none}
+.workspace.active{display:block}
+.section-head{margin-bottom:24px;padding-top:16px}
+.section-head h2{font-size:26px;font-weight:700;letter-spacing:-0.02em;margin-bottom:6px}
+.section-head p{color:var(--text-2);font-size:14px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px 18px;transition:border-color .25s,transform .25s var(--ease),background .35s}
+.stat:hover{border-color:var(--border-hover);transform:translateY(-2px)}
+.stat .num{font-size:28px;font-weight:700;letter-spacing:-0.03em;font-variant-numeric:tabular-nums}
+.stat .lbl{font-size:11px;color:var(--text-3);font-weight:500;margin-top:4px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:16px;transition:background .35s,border-color .35s}
+.panel-h{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border)}
+.panel-h h3{font-size:14px;font-weight:600}
+.panel-b{padding:16px 20px}
+.search-bar{display:flex;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:5px 5px 5px 20px;transition:border-color .25s,box-shadow .25s,background .35s;margin-bottom:18px}
+.search-bar:focus-within{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:0 0 0 3px var(--accent-soft)}
+.search-bar input{flex:1;background:none;border:none;outline:none;font-size:15px;padding:10px 0;color:var(--text)}
+.search-bar input::placeholder{color:var(--text-3)}
+.search-bar .btn-pill{flex-shrink:0}
+.modes{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.mode{padding:7px 15px;border-radius:999px;font-size:12.5px;font-weight:500;color:var(--text-3);border:1px solid var(--border);transition:all .2s}
+.mode:hover{color:var(--text-2)}
+.mode.on{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.hit{padding:16px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.hit:last-child{border-bottom:none}
+.hit:hover{background:color-mix(in srgb,var(--text) 2.5%,transparent)}
+.hit-title{font-size:15px;font-weight:600;color:var(--accent);margin-bottom:4px}
+.hit-meta{display:flex;gap:12px;font-size:12px;color:var(--text-3);margin-bottom:8px;flex-wrap:wrap}
+.hit-body{font-size:13.5px;color:var(--text-2);line-height:1.7}
+.hit-reason{font-size:11px;color:var(--accent);opacity:.75;margin-top:8px;font-family:ui-monospace,monospace;direction:ltr;text-align:left}
+.answer-card{background:linear-gradient(135deg,var(--accent-soft),transparent);border:1px solid color-mix(in srgb,var(--accent) 20%,transparent);border-radius:var(--radius-sm);padding:22px;margin-bottom:18px}
+.answer-card .tag{font-size:11px;font-weight:600;color:var(--accent);margin-bottom:10px}
+.answer-card .txt{font-size:14.5px;line-height:1.8;white-space:pre-wrap}
+.answer-card .srcs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.answer-card .srcs a{color:var(--accent);font-size:12.5px}
+.import-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.import-tile{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:28px 16px;text-align:center;cursor:pointer;transition:all .3s var(--ease)}
+.import-tile:hover{border-color:color-mix(in srgb,var(--accent) 35%,transparent);background:var(--accent-soft);transform:translateY(-3px);box-shadow:0 14px 36px -10px rgba(0,0,0,.15)}
+.import-tile .ico{font-size:26px;margin-bottom:10px}
+.import-tile .ttl{font-weight:600;font-size:14px;margin-bottom:4px}
+.import-tile .dsc{font-size:12px;color:var(--text-3)}
+.form-g{margin-bottom:14px}
+.form-g label{display:block;font-size:12px;font-weight:500;color:var(--text-3);margin-bottom:6px}
+.form-c{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xs);padding:11px 14px;font-size:14px;outline:none;transition:border-color .2s,background .35s}
+.form-c:focus{border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+textarea.form-c{min-height:120px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:right;padding:10px 12px;font-size:11px;font-weight:500;color:var(--text-3);border-bottom:1px solid var(--border)}
+td{padding:12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:color-mix(in srgb,var(--text) 1.5%,transparent)}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;padding:2px 10px;border-radius:999px;font-size:11px;font-weight:600}
+.b-ready{background:color-mix(in srgb,var(--success) 14%,transparent);color:var(--success)}
+.b-crawl{background:var(--accent-soft);color:var(--accent)}
+.b-pend{background:color-mix(in srgb,var(--warning) 14%,transparent);color:var(--warning)}
+.b-fail{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+.b-pause{background:color-mix(in srgb,var(--text-3) 20%,transparent);color:var(--text-3)}
+.btn-sm{padding:5px 12px;border-radius:999px;font-size:12px;font-weight:500;border:1px solid var(--border);color:var(--text-2);transition:all .2s}
+.btn-sm:hover{border-color:var(--text-3);color:var(--text)}
+.btn-sm.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 25%,transparent)}
+.btn-sm.danger:hover{background:color-mix(in srgb,var(--danger) 8%,transparent)}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap}
+.graph-box{height:400px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:16px;transition:background .35s}
+.g-node{position:absolute;padding:7px 14px;border-radius:999px;background:var(--card-elevated);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);font-size:12px;font-weight:500;cursor:pointer;transition:transform .2s,background .2s;white-space:nowrap}
+.g-node:hover{transform:scale(1.08);background:var(--accent-soft)}
+.modal-bg{position:fixed;inset:0;z-index:200;background:var(--overlay);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-bg.open{opacity:1;pointer-events:auto}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);width:90%;max-width:560px;max-height:82vh;overflow-y:auto;transform:translateY(14px) scale(.97);transition:transform .3s var(--ease),background .35s;box-shadow:var(--shadow)}
+.modal-bg.open .modal{transform:none}
+.modal-h{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--border)}
+.modal-h h3{font-size:16px;font-weight:600}
+.modal-x{font-size:22px;color:var(--text-3);line-height:1;padding:4px}
+.modal-x:hover{color:var(--text)}
+.modal-b{padding:20px 22px}
+.empty{text-align:center;padding:48px 20px;color:var(--text-3)}
+.empty .e-ico{font-size:34px;opacity:.3;margin-bottom:10px}
+.loading{text-align:center;padding:44px;color:var(--text-3)}
+.spin{width:22px;height:22px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:var(--card-elevated);border:1px solid var(--border-hover);color:var(--text);padding:12px 22px;border-radius:999px;font-size:13px;font-weight:500;z-index:300;box-shadow:0 12px 36px rgba(0,0,0,.2);animation:toastIn .3s var(--ease)}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}}
+.tree-item{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:8px;cursor:pointer;font-size:13.5px;transition:background .12s}
+.tree-item:hover{background:color-mix(in srgb,var(--text) 3%,transparent)}
+.tree-item .cnt{margin-right:auto;font-size:11px;color:var(--text-3)}
+@media(max-width:860px){
+.nav{padding:12px 16px}
+.nav-links{display:none}
+.nav-links.open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:var(--card);border-bottom:1px solid var(--border);padding:14px 16px;gap:12px}
+.nav-toggle{display:block}
+.hero-card,.detail-card{grid-template-columns:1fr;padding:28px 20px;gap:24px}
+.hero-title-bg{font-size:56px}
+.stats-row{grid-template-columns:repeat(2,1fr)}
+.import-grid{grid-template-columns:repeat(2,1fr)}
+.form-row{grid-template-columns:1fr}
+.detail-visual{order:-1}
+}
+</style>
+</head>
+<body data-theme="dark">
+<div id="app">
+<nav class="nav" id="nav">
+<div class="nav-brand">
+<svg class="logo-eye" viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg" aria-label="لوگوی KIE">
+<path fill-rule="evenodd" d="M4 38C28 6 48 1 60 1c12 0 32 5 56 37C92 70 72 75 60 75 48 75 28 70 4 38zm56-22c-13.5 0-25.5 10-26.8 23.2C32 50.5 40 58 52 60.5c-2-4-2.5-8.5-.5-12.5 3-6 10-8 16-6 4 1.5 7 5 8 9.5 6-5 9-12 7.5-19C80.5 21 72 16 60 16zm0 14c-5 0-9 3.5-10 8.2 2.5-1 5.5-1 8-.2 3 1 5 3.5 5.5 6.5 3.5-2 5.5-6 5.5-10.5C69 33.5 65 30 60 30zm0 10.5a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"/>
+</svg>
+<div class="brand-text">
+<span class="brand-name">موتور هوش دانش</span>
+<span class="brand-ver">KIE · v1.02</span>
+</div>
+</div>
+<div class="nav-links" id="nav-links">
+<a href="#" data-page="home" class="active">خانه</a>
+<a href="#" data-page="search">جست‌وجو</a>
+<a href="#" data-page="sources">منابع</a>
+<a href="#" data-page="import">ورود اطلاعات</a>
+<a href="#" data-page="explorer">مرورگر دانش</a>
+<a href="#" data-page="graph">گراف دانش</a>
+<a href="#" data-page="settings">تنظیمات</a>
+<a href="#" class="nav-cta" data-page="import">افزودن منبع</a>
+</div>
+<div class="nav-actions">
+<button class="theme-btn" id="theme-btn" title="تغییر تم" aria-label="تغییر تم روشن و تیره"><span id="theme-icon">☀</span></button>
+<button class="nav-toggle" id="nav-toggle" aria-label="منو">☰</button>
+</div>
+</nav>
+
+<div class="workspace active" id="page-home">
+<div class="hero-wrap">
+<div class="hero-card">
+<div class="hero-visual">
+<div class="hero-title-bg">KIE</div>
+<div class="hero-orb">
+<div class="orb-ring"></div>
+<svg class="logo-eye" viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" d="M4 38C28 6 48 1 60 1c12 0 32 5 56 37C92 70 72 75 60 75 48 75 28 70 4 38zm56-22c-13.5 0-25.5 10-26.8 23.2C32 50.5 40 58 52 60.5c-2-4-2.5-8.5-.5-12.5 3-6 10-8 16-6 4 1.5 7 5 8 9.5 6-5 9-12 7.5-19C80.5 21 72 16 60 16zm0 14c-5 0-9 3.5-10 8.2 2.5-1 5.5-1 8-.2 3 1 5 3.5 5.5 6.5 3.5-2 5.5-6 5.5-10.5C69 33.5 65 30 60 30zm0 10.5a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"/>
+</svg>
+</div>
+</div>
+<div class="hero-copy">
+<div class="eyebrow">سامانهٔ دانش محلی و آفلاین</div>
+<h1>موتور هوش دانش</h1>
+<div class="price" id="hero-stats-line">محلی · ساختاریافته · قابل جست‌وجو</div>
+<p>منابع خود را وارد کنید. سامانه آن‌ها را به پایگاه دانش ساختاریافته تبدیل می‌کند، پیوند میان مفاهیم را می‌سازد و بدون وابستگی به خدمات ابری، جست‌وجوی هوشمند انجام می‌دهد.</p>
+<div class="hero-actions">
+<button class="btn-pill primary" data-page="import">افزودن منبع</button>
+<button class="btn-pill ghost" data-page="search">جست‌وجوی دانش</button>
+</div>
+<div class="hero-dots"><span class="on"></span><span></span><span></span><span></span></div>
+</div>
+</div>
+</div>
+<div class="detail-wrap">
+<div class="detail-card">
+<div class="detail-specs">
+<div class="spec-row"><span class="spec-label">معماری</span><span class="spec-value">محلی‌محور · SQLite و FTS5</span></div>
+<div class="spec-row"><span class="spec-label">ورود داده</span><span class="spec-value muted">وب‌سایت · PDF · DOCX · متن · Markdown · CSV · JSON · RSS</span></div>
+<div class="spec-row"><span class="spec-label">جست‌وجو</span><span class="spec-value muted">ترکیبی: تمام‌متن · فازی · مفاهیم · پیمایش گراف</span></div>
+<div class="spec-row"><span class="spec-label">لایه هوش مصنوعی</span><span class="spec-value muted">اختیاری و محلی · بدون مدل نیز کامل کار می‌کند</span></div>
+<div class="spec-row"><span class="spec-label">آفلاین</span><span class="spec-value">پس از ورود داده، جست‌وجو و مرور بدون اینترنت</span></div>
+<div class="feature-icons">
+<div class="feature-icon"><div class="fi">◎</div>خزشگر</div>
+<div class="feature-icon"><div class="fi">⬡</div>گراف</div>
+<div class="feature-icon"><div class="fi">⌕</div>ترکیبی</div>
+<div class="feature-icon"><div class="fi">↓</div>ورود</div>
+</div>
+<div style="margin-top:18px"><div class="spec-label" style="margin-bottom:8px">وضعیت</div>
+<div class="color-dots"><i class="on" style="background:var(--success)"></i><i style="background:var(--accent)"></i><i style="background:var(--text-3)"></i></div></div>
+</div>
+<div class="detail-visual">
+<div class="side-dots"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+<div class="detail-side"></div>
+<div class="detail-device"><div class="cam"></div><div class="screen">
+<svg class="logo-eye" viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" d="M4 38C28 6 48 1 60 1c12 0 32 5 56 37C92 70 72 75 60 75 48 75 28 70 4 38zm56-22c-13.5 0-25.5 10-26.8 23.2C32 50.5 40 58 52 60.5c-2-4-2.5-8.5-.5-12.5 3-6 10-8 16-6 4 1.5 7 5 8 9.5 6-5 9-12 7.5-19C80.5 21 72 16 60 16zm0 14c-5 0-9 3.5-10 8.2 2.5-1 5.5-1 8-.2 3 1 5 3.5 5.5 6.5 3.5-2 5.5-6 5.5-10.5C69 33.5 65 30 60 30zm0 10.5a4 4 0 1 0 0 8 4 4 0 1 0 0-8z"/>
+</svg>
+</div><div class="bar"></div></div>
+</div>
+</div>
+</div>
+<div style="max-width:1080px;margin:0 auto;padding:0 0 36px">
+<div class="stats-row" id="home-stats">
+<div class="stat"><div class="num">—</div><div class="lbl">منابع</div></div>
+<div class="stat"><div class="num">—</div><div class="lbl">اسناد</div></div>
+<div class="stat"><div class="num">—</div><div class="lbl">قطعه‌ها</div></div>
+<div class="stat"><div class="num">—</div><div class="lbl">مفاهیم</div></div>
+</div>
+</div>
+</div>
+
+<div class="workspace" id="page-search" style="padding-top:96px">
+<div class="section-head"><h2>جست‌وجو</h2><p>بازیابی ترکیبی در سراسر پایگاه دانش</p></div>
+<div class="modes" id="search-modes">
+<button class="mode on" data-mode="search">جست‌وجو</button>
+<button class="mode" data-mode="explain">توضیح</button>
+<button class="mode" data-mode="research">پژوهش</button>
+</div>
+<div class="search-bar"><input type="text" id="q" placeholder="عبارت یا پرسش خود را وارد کنید…"/><button class="btn-pill primary" id="q-go">جست‌وجو</button></div>
+<div id="search-out"></div>
+</div>
+
+<div class="workspace" id="page-sources" style="padding-top:96px">
+<div class="section-head"><h2>منابع</h2><p>مدیریت، به‌روزرسانی، توقف و نمایه‌سازی مجدد منابع دانش</p></div>
+<div style="margin-bottom:16px"><button class="btn-pill primary" data-page="import">+ افزودن منبع</button></div>
+<div class="panel"><div class="panel-b" style="padding:0;overflow-x:auto">
+<table><thead><tr><th>نام</th><th>نوع</th><th>وضعیت</th><th>اسناد</th><th>قطعه‌ها</th><th>نسخه</th><th>عملیات</th></tr></thead>
+<tbody id="sources-body"><tr><td colspan="7" class="empty">در حال بارگذاری…</td></tr></tbody></table>
+</div></div>
+</div>
+
+<div class="workspace" id="page-import" style="padding-top:96px">
+<div class="section-head"><h2>مرکز ورود اطلاعات</h2><p>ورود دانش از وب‌سایت، پرونده، خوراک یا متن ساده</p></div>
+<div class="import-grid">
+<div class="import-tile" data-import="url"><div class="ico">🌐</div><div class="ttl">وب‌سایت</div><div class="dsc">خزش با کنترل عمق</div></div>
+<div class="import-tile" data-import="file"><div class="ico">📄</div><div class="ttl">پرونده</div><div class="dsc">PDF · DOCX · TXT · MD</div></div>
+<div class="import-tile" data-import="text"><div class="ico">✎</div><div class="ttl">متن</div><div class="dsc">یادداشت دستی</div></div>
+<div class="import-tile" data-import="rss"><div class="ico">📡</div><div class="ttl">RSS / نقشه سایت</div><div class="dsc">خوراک یا نقشه سایت</div></div>
+</div>
+<div id="import-form"></div>
+</div>
+
+<div class="workspace" id="page-explorer" style="padding-top:96px">
+<div class="section-head"><h2>مرورگر دانش</h2><p>مرور دسته‌ها، اسناد و مفاهیم بدون جست‌وجو</p></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px" id="explorer-top"></div>
+<div class="panel" id="explorer-docs"></div>
+</div>
+
+<div class="workspace" id="page-graph" style="padding-top:96px">
+<div class="section-head"><h2>گراف دانش</h2><p>مفاهیم و روابط استخراج‌شده از منابع</p></div>
+<div class="graph-box" id="graph-canvas"></div>
+<div class="panel"><div class="panel-h"><h3>مفاهیم</h3></div><div class="panel-b" id="graph-list" style="display:flex;flex-wrap:wrap;gap:8px"></div></div>
+</div>
+
+<div class="workspace" id="page-settings" style="padding-top:96px">
+<div class="section-head"><h2>تنظیمات</h2><p>وضعیت سامانه و پیکربندی هوش مصنوعی محلی</p></div>
+<div class="panel"><div class="panel-h"><h3>لایه هوش مصنوعی</h3></div><div class="panel-b" id="ai-status">در حال بارگذاری…</div></div>
+<div class="panel"><div class="panel-h"><h3>سامانه</h3></div><div class="panel-b" id="sys-status">در حال بارگذاری…</div></div>
+<div class="panel"><div class="panel-h"><h3>ظاهر</h3></div><div class="panel-b">
+<div class="spec-row"><span class="spec-label">تم</span><span class="spec-value"><button class="btn-sm" id="set-theme-dark">تیره</button> <button class="btn-sm" id="set-theme-light">روشن</button></span></div>
+<div class="spec-row"><span class="spec-label">نسخه رابط</span><span class="spec-value">v1.02</span></div>
+</div></div>
+</div>
+</div>
+
+<div class="modal-bg" id="modal-bg">
+<div class="modal"><div class="modal-h"><h3 id="modal-title">—</h3><button class="modal-x" id="modal-x" aria-label="بستن">×</button></div><div class="modal-b" id="modal-body"></div></div>
+</div>
+
+<script>
+const API=(location.port==='8000'||location.hostname==='localhost')?location.protocol+'//'+location.hostname+':8000/api':'/api';
+const STATUS_FA={ready:'آماده',crawling:'در حال خزش',pending:'در انتظار',failed:'ناموفق',paused:'متوقف',indexing:'نمایه‌سازی'};
+const TYPE_FA={website:'وب‌سایت',sitemap:'نقشه سایت',pdf:'PDF',txt:'متن',docx:'DOCX',csv:'CSV',json:'JSON',html:'HTML',markdown:'Markdown',rss:'RSS',api:'API',text:'یادداشت',manual:'دستی'};
+const state={page:'home',searchMode:'search'};
+function getTheme(){return localStorage.getItem('kie-theme')||'dark'}
+function setTheme(t){document.body.setAttribute('data-theme',t);localStorage.setItem('kie-theme',t);const icon=document.getElementById('theme-icon');if(icon)icon.textContent=t==='dark'?'☀':'☾'}
+setTheme(getTheme());
+document.getElementById('theme-btn').onclick=()=>setTheme(getTheme()==='dark'?'light':'dark');
+document.getElementById('set-theme-dark')?.addEventListener('click',()=>setTheme('dark'));
+document.getElementById('set-theme-light')?.addEventListener('click',()=>setTheme('light'));
+async function api(path,opts){opts=opts||{};const conf=Object.assign({headers:{}},opts);if(opts.body&&!(opts.body instanceof FormData)){conf.headers['Content-Type']='application/json';conf.body=JSON.stringify(opts.body)}try{const res=await fetch(API+path,conf);if(!res.ok){const err=await res.json().catch(()=>({detail:res.statusText}));throw new Error(err.detail||err.message||'خطای HTTP '+res.status)}return await res.json()}catch(e){if(String(e.message).includes('Failed to fetch'))throw new Error('سرور در دسترس نیست. دستور: uvicorn app.main:app --port 8000');throw e}}
+function $(s){return document.querySelector(s)}
+function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function toast(msg,type){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+function badge(s){const m={ready:'b-ready',crawling:'b-crawl',pending:'b-pend',failed:'b-fail',paused:'b-pause',indexing:'b-crawl'};return'<span class="badge '+(m[s]||'')+'">'+(STATUS_FA[s]||s)+'</span>'}
+function go(page){state.page=page;document.querySelectorAll('.workspace').forEach(w=>w.classList.remove('active'));const el=document.getElementById('page-'+page);if(el)el.classList.add('active');document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));$('#nav-links').classList.remove('open');window.scrollTo({top:0,behavior:'smooth'});if(page==='home')loadHome();if(page==='sources')loadSources();if(page==='explorer')loadExplorer();if(page==='graph')loadGraph();if(page==='settings')loadSettings()}
+document.querySelectorAll('[data-page]').forEach(el=>{el.addEventListener('click',e=>{e.preventDefault();if(el.dataset.page)go(el.dataset.page)})});
+document.getElementById('nav-toggle').onclick=()=>document.getElementById('nav-links').classList.toggle('open');
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>20)});
+function openModal(title,html){$('#modal-title').textContent=title;$('#modal-body').innerHTML=html;$('#modal-bg').classList.add('open')}
+function closeModal(){$('#modal-bg').classList.remove('open')}
+$('#modal-x').onclick=closeModal;
+$('#modal-bg').onclick=e=>{if(e.target===$('#modal-bg'))closeModal()};
+async function loadHome(){try{const s=await api('/dashboard');$('#home-stats').innerHTML='<div class="stat"><div class="num">'+s.total_sources+'</div><div class="lbl">منابع</div></div><div class="stat"><div class="num">'+s.total_documents+'</div><div class="lbl">اسناد</div></div><div class="stat"><div class="num">'+s.total_chunks+'</div><div class="lbl">قطعه‌ها</div></div><div class="stat"><div class="num">'+s.total_concepts+'</div><div class="lbl">مفاهیم</div></div>';$('#hero-stats-line').textContent=s.total_documents+' سند · '+s.total_concepts+' مفهوم · محلی'}catch(e){$('#hero-stats-line').textContent='سرور متصل نیست'}}
+document.querySelectorAll('#search-modes .mode').forEach(btn=>{btn.onclick=()=>{state.searchMode=btn.dataset.mode;document.querySelectorAll('#search-modes .mode').forEach(b=>b.classList.toggle('on',b===btn))}});
+async function doSearch(){const q=$('#q').value.trim();if(!q)return;const out=$('#search-out');out.innerHTML='<div class="loading"><div class="spin"></div></div>';try{const data=await api('/search',{method:'POST',body:{query:q,answer_mode:state.searchMode,mode:'hybrid',limit:20}});let html='';if(data.answer){const modeLabel=data.mode==='research'?'گزارش پژوهشی':data.mode==='explain'?'توضیح':'پاسخ';html+='<div class="answer-card"><div class="tag">'+modeLabel+(data.ai_available?'':' · استخراجی از پایگاه دانش')+'</div><div class="txt">'+esc(data.answer)+'</div>';if(data.sources&&data.sources.length){html+='<div class="srcs"><strong style="font-size:12px;color:var(--text-3)">منابع</strong>';data.sources.forEach(s=>{html+='<div style="margin:4px 0;font-size:12.5px;color:var(--text-3)">['+s.index+'] <a href="#" onclick="viewDoc('+s.document_id+');return false">'+esc(s.title)+'</a> — '+esc(s.source_name||'')+'</div>'});html+='</div>'}if(data.sufficient_data===false)html+='<p style="color:var(--warning);margin-top:10px;font-size:13px">دادهٔ کافی در پایگاه دانش یافت نشد.</p>';html+='</div>'}if(data.expanded_terms&&data.expanded_terms.length){html+='<p style="font-size:12px;color:var(--text-3);margin-bottom:12px">گسترش‌یافته: '+data.expanded_terms.map(t=>'<span class="badge" style="margin:2px;background:var(--accent-soft);color:var(--accent)">'+esc(t)+'</span>').join(' ')+' · '+data.total+' نتیجه · '+data.took_ms+' میلی‌ثانیه</p>'}if(data.hits&&data.hits.length){html+='<div class="panel">';data.hits.forEach(h=>{html+='<div class="hit" onclick="viewDoc('+h.document_id+')"><div class="hit-title">'+esc(h.title)+'</div><div class="hit-meta"><span>'+esc(h.source_name)+'</span><span>'+Math.round(h.score*100)+'٪</span><span>'+h.match_type+'</span></div><div class="hit-body">'+esc(h.content)+'</div>'+(h.reason?'<div class="hit-reason">'+esc(h.reason)+'</div>':'')+'</div>'});html+='</div>'}else if(!data.answer){html+='<div class="empty"><div class="e-ico">⌕</div><p>نتیجه‌ای یافت نشد.</p></div>'}out.innerHTML=html}catch(e){out.innerHTML='<div class="empty"><p style="color:var(--danger)">'+esc(e.message)+'</p></div>'}}
+$('#q-go').onclick=doSearch;$('#q').onkeydown=e=>{if(e.key==='Enter')doSearch()};
+async function loadSources(){const body=$('#sources-body');try{const sources=await api('/sources');if(!sources.length){body.innerHTML='<tr><td colspan="7"><div class="empty">هنوز منبعی ثبت نشده است. از بخش ورود اطلاعات آغاز کنید.</div></td></tr>';return}body.innerHTML=sources.map(s=>'<tr><td><strong>'+esc(s.name)+'</strong>'+(s.url?'<br><span style="font-size:11px;color:var(--text-3);direction:ltr;display:inline-block">'+esc(s.url).slice(0,48)+'</span>':'')+'</td><td>'+(TYPE_FA[s.source_type]||s.source_type)+'</td><td>'+badge(s.status)+'</td><td>'+s.document_count+'</td><td>'+s.chunk_count+'</td><td>نسخه '+s.version+'</td><td><div class="btn-row">'+(['website','sitemap','rss'].indexOf(s.source_type)>=0?'<button class="btn-sm" onclick="crawlSrc('+s.id+')">به‌روزرسانی</button><button class="btn-sm" onclick="pauseSrc('+s.id+')">توقف</button>':'')+'<button class="btn-sm danger" onclick="delSrc('+s.id+')">حذف</button></div></td></tr>').join('')}catch(e){body.innerHTML='<tr><td colspan="7"><div class="empty">'+esc(e.message)+'</div></td></tr>'}}
+async function crawlSrc(id){try{await api('/sources/'+id+'/crawl',{method:'POST'});toast('خزش آغاز شد');setTimeout(loadSources,800)}catch(e){toast(e.message,'error')}}
+async function pauseSrc(id){try{await api('/sources/'+id+'/pause',{method:'POST'});toast('متوقف شد');loadSources()}catch(e){toast(e.message,'error')}}
+async function delSrc(id){if(!confirm('این منبع و تمام اسناد آن حذف شود؟'))return;try{await api('/sources/'+id,{method:'DELETE'});toast('حذف شد');loadSources()}catch(e){toast(e.message,'error')}}
+document.querySelectorAll('[data-import]').forEach(tile=>{tile.onclick=()=>showImport(tile.dataset.import)});
+function showImport(type){const area=$('#import-form');if(type==='url'||type==='rss'){area.innerHTML='<div class="panel"><div class="panel-h"><h3>'+(type==='rss'?'RSS / نقشه سایت':'خزش وب‌سایت')+'</h3></div><div class="panel-b"><div class="form-g"><label>نام</label><input class="form-c" id="i-name" placeholder="نام منبع"/></div><div class="form-g"><label>نشانی</label><input class="form-c" id="i-url" dir="ltr" placeholder="https://…"/></div><div class="form-row"><div class="form-g"><label>عمق خزش</label><input class="form-c" id="i-depth" type="number" value="2" min="0" max="5"/></div><div class="form-g"><label>حداکثر صفحات</label><input class="form-c" id="i-max" type="number" value="20" min="1" max="200"/></div></div><div class="form-g"><label>برچسب‌ها (با ویرگول)</label><input class="form-c" id="i-tags"/></div><button class="btn-pill primary" id="i-go">آغاز خزش</button></div></div>';$('#i-go').onclick=async()=>{const url=$('#i-url').value;if(!url)return toast('نشانی الزامی است','error');try{const res=await api('/import/url',{method:'POST',body:{name:$('#i-name').value||url,url,source_type:type==='rss'?'rss':'website',crawl_depth:+$('#i-depth').value||2,max_pages:+$('#i-max').value||20,tags:($('#i-tags').value||'').split(',').map(t=>t.trim()).filter(Boolean)}});toast('خزش آغاز شد · منبع شماره '+res.source_id);go('sources')}catch(e){toast(e.message,'error')}}}else if(type==='file'){area.innerHTML='<div class="panel"><div class="panel-h"><h3>بارگذاری پرونده</h3></div><div class="panel-b"><div class="form-g"><label>نام (اختیاری)</label><input class="form-c" id="i-name"/></div><div class="form-g"><label>پرونده</label><input class="form-c" id="i-file" type="file" accept=".pdf,.txt,.md,.docx,.csv,.json,.html"/></div><div class="form-g"><label>برچسب‌ها</label><input class="form-c" id="i-tags"/></div><button class="btn-pill primary" id="i-go">بارگذاری و نمایه‌سازی</button></div></div>';$('#i-go').onclick=async()=>{const f=$('#i-file');if(!f.files.length)return toast('پرونده‌ای انتخاب نشده است','error');const fd=new FormData();fd.append('file',f.files[0]);if($('#i-name').value)fd.append('name',$('#i-name').value);fd.append('tags',$('#i-tags').value||'');try{const res=await api('/import/file',{method:'POST',body:fd});toast('نمایه‌سازی شد · '+res.chunk_count+' قطعه');go('sources')}catch(e){toast(e.message,'error')}}}else if(type==='text'){area.innerHTML='<div class="panel"><div class="panel-h"><h3>متن دستی</h3></div><div class="panel-b"><div class="form-g"><label>عنوان</label><input class="form-c" id="i-title"/></div><div class="form-g"><label>متن</label><textarea class="form-c" id="i-content" rows="8"></textarea></div><div class="form-g"><label>برچسب‌ها</label><input class="form-c" id="i-tags"/></div><button class="btn-pill primary" id="i-go">ورود به پایگاه دانش</button></div></div>';$('#i-go').onclick=async()=>{const title=$('#i-title').value,content=$('#i-content').value;if(!title||!content)return toast('عنوان و متن الزامی است','error');try{const res=await api('/import/text',{method:'POST',body:{title,content,tags:($('#i-tags').value||'').split(',').map(t=>t.trim()).filter(Boolean)}});toast('وارد شد · '+res.chunk_count+' قطعه');go('explorer')}catch(e){toast(e.message,'error')}}}}
+async function loadExplorer(){try{const[docs,cats,concepts]=await Promise.all([api('/documents?limit=30'),api('/categories'),api('/concepts?limit=20')]);$('#explorer-top').innerHTML='<div class="panel"><div class="panel-h"><h3>دسته‌ها</h3></div><div class="panel-b">'+(cats.map(c=>'<div class="tree-item"><span>'+(c.icon||'📁')+'</span><span>'+esc(c.name)+'</span><span class="cnt">'+c.document_count+'</span></div>').join('')||'<p style="color:var(--text-3)">موردی نیست</p>')+'</div></div><div class="panel"><div class="panel-h"><h3>مفاهیم</h3></div><div class="panel-b">'+(concepts.map(c=>'<div class="tree-item" onclick="viewConcept('+c.id+')"><span>⬡</span><span>'+esc(c.name)+'</span><span class="cnt">'+c.mention_count+'</span></div>').join('')||'<p style="color:var(--text-3)">موردی نیست</p>')+'</div></div>';$('#explorer-docs').innerHTML='<div class="panel-h"><h3>اسناد ('+docs.total+')</h3></div>'+(docs.documents.map(d=>'<div class="hit" onclick="viewDoc('+d.id+')"><div class="hit-title">'+esc(d.title)+'</div><div class="hit-meta"><span>'+d.word_count+' واژه</span></div><div class="hit-body">'+esc(d.summary||'')+'</div></div>').join('')||'<div class="empty">سندی وجود ندارد</div>')}catch(e){$('#explorer-top').innerHTML='<div class="empty">'+esc(e.message)+'</div>'}}
+async function loadGraph(){try{const g=await api('/graph?limit=40');const canvas=$('#graph-canvas');canvas.innerHTML='';const w=canvas.clientWidth||600,h=400;g.nodes.forEach((n,i)=>{const angle=(i/Math.max(g.nodes.length,1))*Math.PI*2;const r=100+(n.mentions||1)*6;const x=Math.max(20,Math.min(w-110,w/2+Math.cos(angle)*r-40));const y=Math.max(20,Math.min(h-36,h/2+Math.sin(angle)*r-12));const node=document.createElement('div');node.className='g-node';node.textContent=n.name;node.style.left=x+'px';node.style.top=y+'px';node.onclick=()=>viewConcept(n.id);canvas.appendChild(node)});$('#graph-list').innerHTML=g.nodes.map(n=>'<span class="badge" style="cursor:pointer;padding:6px 12px;background:var(--accent-soft);color:var(--accent)" onclick="viewConcept('+n.id+')">'+esc(n.name)+' ('+n.mentions+')</span>').join('')||'<span style="color:var(--text-3)">هنوز مفهومی استخراج نشده است</span>'}catch(e){$('#graph-canvas').innerHTML='<div class="empty">'+esc(e.message)+'</div>'}}
+async function loadSettings(){try{const[ai,health]=await Promise.all([api('/ai/status'),api('/health')]);$('#ai-status').innerHTML='<div class="spec-row"><span class="spec-label">فعال</span><span class="spec-value">'+(ai.enabled?'بله':'خیر')+'</span></div><div class="spec-row"><span class="spec-label">ارائه‌دهنده</span><span class="spec-value">'+ai.provider+'</span></div><div class="spec-row"><span class="spec-label">دسترس‌پذیری</span><span class="spec-value">'+(ai.available?'متصل':'در دسترس نیست')+'</span></div><p style="margin-top:12px;font-size:13px;color:var(--text-3)">سامانه بدون هوش مصنوعی نیز کامل کار می‌کند. برای پاسخ‌گویی با مدل محلی، Ollama را فعال کنید.</p>';$('#sys-status').innerHTML='<div class="spec-row"><span class="spec-label">نسخه</span><span class="spec-value">'+health.version+'</span></div><div class="spec-row"><span class="spec-label">حالت آفلاین</span><span class="spec-value">فعال</span></div><p style="margin-top:14px"><button class="btn-pill ghost" id="btn-backup">ایجاد نسخهٔ پشتیبان</button></p>';$('#btn-backup').onclick=async()=>{try{const r=await api('/backup',{method:'POST'});toast('پشتیبان ساخته شد · '+(r.size/1024).toFixed(1)+' کیلوبایت')}catch(e){toast(e.message,'error')}};document.getElementById('set-theme-dark')?.addEventListener('click',()=>setTheme('dark'));document.getElementById('set-theme-light')?.addEventListener('click',()=>setTheme('light'))}catch(e){$('#ai-status').innerHTML='<p style="color:var(--danger)">'+esc(e.message)+'</p>'}}
+async function viewDoc(id){try{const doc=await api('/documents/'+id);openModal(doc.title,'<div style="margin-bottom:12px">'+badge(doc.source?doc.source.type:'')+' <span style="font-size:12px;color:var(--text-3);margin-right:8px">'+doc.word_count+' واژه</span></div>'+(doc.summary?'<p style="color:var(--text-2);font-style:italic;margin-bottom:12px;font-size:13.5px">'+esc(doc.summary)+'</p>':'')+'<div style="max-height:380px;overflow-y:auto;white-space:pre-wrap;font-size:13.5px;line-height:1.8;direction:auto">'+esc((doc.content||'').slice(0,8000))+'</div>'+(doc.concepts&&doc.concepts.length?'<div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)"><div style="font-size:11px;color:var(--text-3);margin-bottom:8px;font-weight:600">مفاهیم</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+doc.concepts.map(c=>'<span class="badge" style="cursor:pointer;background:var(--accent-soft);color:var(--accent)" onclick="closeModal();viewConcept('+c.id+')">'+esc(c.name)+'</span>').join('')+'</div></div>':''))}catch(e){toast(e.message,'error')}}
+async function viewConcept(id){try{const g=await api('/concepts/'+id+'/graph?depth=2');openModal('گراف مفهوم','<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">'+g.nodes.map(n=>'<span class="badge" style="padding:6px 12px;'+(n.depth===0?'border:1px solid var(--accent);background:var(--accent-soft);color:var(--accent)':'background:var(--surface);color:var(--text-2)')+'">'+esc(n.name)+' · عمق '+n.depth+'</span>').join('')+'</div>'+(g.edges.length?'<div style="font-size:11px;color:var(--text-3);font-weight:600;margin-bottom:8px">روابط</div><ul style="padding-right:18px;font-size:13px;color:var(--text-2)">'+g.edges.map(e=>{const f=g.nodes.find(n=>n.id===e.from);const t=g.nodes.find(n=>n.id===e.to);return'<li style="margin:4px 0">'+(f?f.name:e.from)+' —['+e.type+']→ '+(t?t.name:e.to)+'</li>'}).join('')+'</ul>':'<p style="color:var(--text-3)">هنوز رابطه‌ای ثبت نشده است</p>'))}catch(e){toast(e.message,'error')}}
+window.viewDoc=viewDoc;window.viewConcept=viewConcept;window.crawlSrc=crawlSrc;window.pauseSrc=pauseSrc;window.delSrc=delSrc;window.closeModal=closeModal;
+loadHome();
+</script>
+</body>
+</html>

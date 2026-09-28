@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knowledge Intelligence Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon">◈</div>
+        <div class="brand-text">
+          <span class="brand-name">KIE</span>
+          <span class="brand-sub">Knowledge OS</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-page="dashboard"><span class="nav-icon">▣</span> Dashboard</button>
+        <button class="nav-item" data-page="search"><span class="nav-icon">⌕</span> Search</button>
+        <button class="nav-item" data-page="explorer"><span class="nav-icon">☰</span> Explorer</button>
+        <button class="nav-item" data-page="graph"><span class="nav-icon">⬡</span> Knowledge Graph</button>
+        <button class="nav-item" data-page="sources"><span class="nav-icon">◎</span> Sources</button>
+        <button class="nav-item" data-page="import"><span class="nav-icon">↓</span> Import Center</button>
+        <button class="nav-item" data-page="categories"><span class="nav-icon">⊞</span> Categories</button>
+        <button class="nav-item" data-page="quality"><span class="nav-icon">⚠</span> Data Quality</button>
+        <button class="nav-item" data-page="activity"><span class="nav-icon">◷</span> Activity</button>
+        <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span> Settings</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="status-pill" id="offline-status">
+          <span class="dot online"></span> Offline-Ready
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <div class="topbar-search" id="global-search-wrap">
+          <input type="text" id="global-search" placeholder="جست‌وجو در کل دانش… / Search knowledge base…" />
+          <button id="global-search-btn">Search</button>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn-ghost" id="btn-backup" title="Backup">Backup</button>
+        </div>
+      </header>
+
+      <div class="content" id="content">
+        <!-- Pages injected here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-overlay" hidden>
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 id="modal-title">Modal</h3>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
