@@ -1196,3 +1196,59 @@ body.light[data-theme="prism"] .chip.active {
   background: #65a30d;
   color: #fff !important;
 }
+
+/* Visible playback progress */
+.progress-track {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: color-mix(in srgb, var(--text) 12%, transparent);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  overflow: visible;
+}
+.progress-fill-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 4px;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+.progress-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 50%, transparent);
+  pointer-events: none;
+  transition: left 0.1s linear;
+}
+.waveform-container {
+  display: none; /* replaced by reliable progress bar */
+  height: 0;
+  overflow: hidden;
+}
+[data-theme="prism"] .progress-track {
+  border-radius: 0;
+  height: 6px;
+  background: #1e1e28;
+}
+[data-theme="prism"] .progress-fill-bar {
+  border-radius: 0;
+  background: #a3e635;
+}
+[data-theme="prism"] .progress-thumb {
+  border-radius: 0;
+  background: #ec4899;
+  width: 10px;
+  height: 14px;
+  margin-top: -7px;
+  margin-left: -5px;
+}
