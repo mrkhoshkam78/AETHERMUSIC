@@ -703,3 +703,496 @@ body.light .icon-moon { display: block; }
 ::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--text) 14%, transparent); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--text) 22%, transparent); }
 ::selection { background: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--text); }
+
+/* ============================================================
+   PRISM — completely different art direction (not a recolor)
+   Editorial / brutalist studio · sharp geometry · split layout
+   ============================================================ */
+
+[data-theme="prism"] {
+  --radius: 2px;
+  --radius-sm: 2px;
+  --radius-xs: 0;
+  --radius-pill: 2px;
+  --font: 'Vazirmatn', 'Courier New', monospace;
+}
+
+[data-theme="prism"] body,
+body[data-theme="prism"] {
+  letter-spacing: 0.01em;
+}
+
+/* Prism: hard geometric background instead of soft orbs */
+[data-theme="prism"] .bg-gradient {
+  background:
+    linear-gradient(180deg, #050508 0%, #0a0a10 100%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 79px,
+      rgba(236, 72, 153, 0.04) 79px,
+      rgba(236, 72, 153, 0.04) 80px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 79px,
+      rgba(163, 230, 53, 0.03) 79px,
+      rgba(163, 230, 53, 0.03) 80px
+    );
+  background-blend-mode: normal;
+}
+
+[data-theme="prism"] .bg-noise { opacity: 0.15; }
+
+[data-theme="prism"] .bg-orbs { display: none; }
+
+/* Prism header: underline bar, mono feel, no blur soft glass */
+[data-theme="prism"] .header {
+  background: #050508;
+  backdrop-filter: none;
+  border-bottom: 2px solid #ec4899;
+  height: 56px;
+}
+
+[data-theme="prism"] .header-inner {
+  max-width: 1400px;
+  gap: 16px;
+}
+
+[data-theme="prism"] .logo-text {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.95rem;
+}
+
+[data-theme="prism"] .logo-text span {
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+  color: #a3e635 !important;
+}
+
+[data-theme="prism"] .nav-btn {
+  border-radius: 0;
+  border: 1px solid transparent;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 6px 12px;
+}
+
+[data-theme="prism"] .nav-btn.active {
+  background: #ec4899;
+  color: #fff;
+  box-shadow: none;
+  border-color: #ec4899;
+}
+
+[data-theme="prism"] .nav-btn:hover {
+  border-color: #ec4899;
+  background: transparent;
+  color: #ec4899;
+}
+
+[data-theme="prism"] .icon-btn {
+  border-radius: 0;
+  border: 1px solid #333;
+}
+
+[data-theme="prism"] .theme-select {
+  border-radius: 0;
+  border: 1px solid #ec4899;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+
+/* Prism main: wider, tighter */
+[data-theme="prism"] .main {
+  max-width: 1400px;
+  padding-top: 24px;
+}
+
+[data-theme="prism"] .creator-hero {
+  text-align: right;
+  margin-bottom: 24px;
+  border-right: 4px solid #ec4899;
+  padding-right: 20px;
+}
+
+[data-theme="prism"] .hero-title {
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+  color: #f8fafc !important;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 800;
+}
+
+[data-theme="prism"] .hero-subtitle {
+  font-size: 0.88rem;
+  max-width: none;
+  margin: 0;
+  color: #94a3b8;
+}
+
+/* Prism panel: hard border, no soft shadow, split sections */
+[data-theme="prism"] .creator-panel {
+  background: #0a0a10;
+  border: 2px solid #1e1e28;
+  border-top: 2px solid #ec4899;
+  border-radius: 0;
+  box-shadow: 8px 8px 0 #ec4899;
+  padding: 24px;
+  gap: 20px;
+}
+
+[data-theme="prism"] .form-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a3e635;
+  font-weight: 700;
+}
+
+[data-theme="prism"] .label-icon { display: none; }
+
+[data-theme="prism"] .form-textarea,
+[data-theme="prism"] .form-input,
+[data-theme="prism"] .form-select {
+  border-radius: 0;
+  border: 1px solid #2a2a38;
+  background: #050508;
+  font-size: 0.88rem;
+}
+
+[data-theme="prism"] .form-textarea:focus,
+[data-theme="prism"] .form-input:focus,
+[data-theme="prism"] .form-select:focus {
+  border-color: #a3e635;
+  box-shadow: 0 0 0 1px #a3e635;
+}
+
+/* Prism genres: hard squares, no gradients, inverted active */
+[data-theme="prism"] .genre-grid {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 6px;
+}
+
+[data-theme="prism"] .genre-card {
+  border-radius: 0;
+  border: 1px solid #2a2a38;
+  background: transparent;
+  padding: 12px 6px;
+}
+
+[data-theme="prism"] .genre-card::before { display: none; }
+
+[data-theme="prism"] .genre-card:hover {
+  border-color: #ec4899;
+  transform: none;
+  background: rgba(236, 72, 153, 0.08);
+}
+
+[data-theme="prism"] .genre-card.active {
+  background: #ec4899;
+  border-color: #ec4899;
+  box-shadow: none;
+}
+
+[data-theme="prism"] .genre-card.active span {
+  color: #fff !important;
+  font-weight: 800;
+}
+
+[data-theme="prism"] .genre-card span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Prism chips */
+[data-theme="prism"] .chip {
+  border-radius: 0;
+  border: 1px solid #2a2a38;
+  background: transparent;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 6px 12px;
+}
+
+[data-theme="prism"] .chip.active {
+  background: #a3e635;
+  border-color: #a3e635;
+  color: #050508 !important;
+  box-shadow: none;
+  font-weight: 800;
+}
+
+[data-theme="prism"] .mood-chips .chip.active {
+  background: #a3e635;
+  border-color: #a3e635;
+  color: #050508 !important;
+  box-shadow: none;
+}
+
+[data-theme="prism"] .instrument-chip {
+  border-radius: 0;
+  border: 1px dashed #2a2a38;
+  background: transparent;
+}
+
+[data-theme="prism"] .instrument-chip.active {
+  border-style: solid;
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  box-shadow: none;
+  color: #38bdf8;
+}
+
+/* Prism CTA: full-width block button */
+[data-theme="prism"] .create-action { padding-top: 12px; }
+
+[data-theme="prism"] .btn-create {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 0;
+  background: #ec4899;
+  box-shadow: 6px 6px 0 #a3e635;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 18px 32px;
+}
+
+[data-theme="prism"] .btn-create:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 #a3e635;
+}
+
+[data-theme="prism"] .btn-glow { display: none; }
+
+/* Prism track cards: horizontal strip layout feel */
+[data-theme="prism"] .tracks-grid {
+  grid-template-columns: 1fr;
+  gap: 0;
+  border: 2px solid #1e1e28;
+}
+
+[data-theme="prism"] .track-card {
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #1e1e28;
+  background: #0a0a10;
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 8px 16px;
+  align-items: center;
+}
+
+[data-theme="prism"] .track-card:hover {
+  transform: none;
+  background: #12121a;
+  box-shadow: inset 4px 0 0 #ec4899;
+  border-color: transparent;
+}
+
+[data-theme="prism"] .track-card.playing {
+  box-shadow: inset 4px 0 0 #a3e635;
+  background: #0f1408;
+  border-color: transparent;
+}
+
+[data-theme="prism"] .track-header {
+  margin-bottom: 0;
+  grid-column: 1 / 3;
+}
+
+[data-theme="prism"] .track-cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  border: 1px solid #2a2a38;
+}
+
+[data-theme="prism"] .track-cover::after { display: none; }
+
+[data-theme="prism"] .track-name {
+  font-size: 0.88rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+[data-theme="prism"] .track-tags {
+  margin-bottom: 0;
+  grid-column: 2;
+}
+
+[data-theme="prism"] .tag {
+  border-radius: 0;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid currentColor;
+  background: transparent !important;
+}
+
+[data-theme="prism"] .tag.genre { color: #ec4899; }
+[data-theme="prism"] .tag.mood { color: #a3e635; }
+
+[data-theme="prism"] .track-actions {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  flex-direction: column;
+  opacity: 1;
+}
+
+[data-theme="prism"] .action-btn {
+  border-radius: 0;
+  width: 30px;
+  height: 30px;
+}
+
+[data-theme="prism"] .action-btn.play-track {
+  margin-right: 0;
+  background: #ec4899;
+  color: #fff;
+}
+
+/* Prism filters */
+[data-theme="prism"] .filters-bar {
+  border-radius: 0;
+  border: 2px solid #1e1e28;
+  border-top: 2px solid #a3e635;
+  background: #0a0a10;
+  box-shadow: none;
+}
+
+[data-theme="prism"] .section-title {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 1.2rem;
+  border-bottom: 2px solid #ec4899;
+  display: inline-block;
+  padding-bottom: 6px;
+}
+
+/* Prism player: flat bar, sharp */
+[data-theme="prism"] .player-bar {
+  background: #050508;
+  border-top: 2px solid #a3e635;
+  backdrop-filter: none;
+  height: 80px;
+}
+
+[data-theme="prism"] .player-btn.play-btn {
+  border-radius: 0;
+  background: #a3e635;
+  color: #050508;
+}
+
+[data-theme="prism"] .player-cover,
+[data-theme="prism"] .cover-visual {
+  border-radius: 0;
+}
+
+[data-theme="prism"] .btn-primary {
+  border-radius: 0;
+  background: #ec4899;
+}
+
+[data-theme="prism"] .btn-secondary {
+  border-radius: 0;
+}
+
+[data-theme="prism"] .btn-ghost {
+  border-radius: 0;
+}
+
+[data-theme="prism"] .modal-content {
+  border-radius: 0;
+  border: 2px solid #ec4899;
+  box-shadow: 10px 10px 0 #a3e635;
+}
+
+[data-theme="prism"] .context-menu {
+  border-radius: 0;
+  border: 2px solid #ec4899;
+}
+
+[data-theme="prism"] .toast {
+  border-radius: 0;
+  border: 2px solid #a3e635;
+  background: #050508;
+}
+
+[data-theme="prism"] .slider::-webkit-slider-thumb {
+  border-radius: 0;
+  width: 14px;
+  height: 14px;
+  background: #ec4899;
+  border: none;
+}
+
+[data-theme="prism"] .tempo-preset {
+  border-radius: 0;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+}
+
+[data-theme="prism"] .tempo-preset.active {
+  background: #ec4899;
+  color: #fff;
+  border-color: #ec4899;
+}
+
+/* Prism light mode */
+body.light[data-theme="prism"] .header {
+  background: #fafafa;
+  border-bottom-color: #db2777;
+}
+
+body.light[data-theme="prism"] .bg-gradient {
+  background:
+    linear-gradient(180deg, #fafafa 0%, #f0f0f0 100%),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(219, 39, 119, 0.06) 79px, rgba(219, 39, 119, 0.06) 80px);
+}
+
+body.light[data-theme="prism"] .creator-panel {
+  background: #fff;
+  border-color: #e5e5e5;
+  box-shadow: 8px 8px 0 #db2777;
+}
+
+body.light[data-theme="prism"] .track-card {
+  background: #fff;
+  border-bottom-color: #e5e5e5;
+}
+
+body.light[data-theme="prism"] .tracks-grid {
+  border-color: #e5e5e5;
+}
+
+body.light[data-theme="prism"] .hero-title {
+  color: #141418 !important;
+}
+
+body.light[data-theme="prism"] .player-bar {
+  background: #fff;
+  border-top-color: #65a30d;
+}
+
+body.light[data-theme="prism"] .genre-card.active {
+  background: #db2777;
+}
+
+body.light[data-theme="prism"] .chip.active {
+  background: #65a30d;
+  color: #fff !important;
+}
